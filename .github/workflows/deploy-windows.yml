@@ -211,9 +211,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
-    environment:
-      name: github-pages
-      url: https://akra-devs.github.io/akra-shutdown-checker-pages/
     steps:
       - name: Download verified public bundle
         uses: actions/download-artifact@v4
