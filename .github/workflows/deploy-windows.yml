@@ -167,7 +167,8 @@ jobs:
           test -s "artifact/${file_name}.sha256"
           test "$(stat -c '%s' "artifact/${file_name}")" -lt 100000000
           test "$(sha256sum "artifact/${file_name}" | cut -d' ' -f1)" = "$expected_hash"
-          grep -Fxq "${expected_hash}  ${file_name}" "artifact/${file_name}.sha256"
+          tr -d '\r' < "artifact/${file_name}.sha256" \
+            | grep -Fxq "${expected_hash}  ${file_name}"
 
           rm -rf package
           mkdir package
