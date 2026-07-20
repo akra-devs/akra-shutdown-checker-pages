@@ -3,8 +3,6 @@ const detailVersion = document.querySelector("#release-detail-version");
 const date = document.querySelector("#release-date");
 const size = document.querySelector("#release-size");
 const sha = document.querySelector("#release-sha");
-const download = document.querySelector("#download-button");
-const checksum = document.querySelector("#checksum-link");
 
 fetch("./release.json", { cache: "no-store" })
   .then((response) => {
@@ -28,8 +26,6 @@ fetch("./release.json", { cache: "no-store" })
     date.textContent = builtAt;
     size.textContent = `${megabytes} MB`;
     sha.textContent = release.sha256;
-    download.href = `./${encodeURIComponent(release.file_name)}`;
-    checksum.href = `./${encodeURIComponent(release.file_name)}.sha256`;
   })
   .catch(() => {
     date.textContent = "페이지 배포 정보 확인 필요";

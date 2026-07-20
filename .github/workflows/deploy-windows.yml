@@ -221,6 +221,54 @@ jobs:
           name: ${{ env.TRANSFER_ARTIFACT }}
           path: publish
 
+      - name: Publish GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ needs.fetch-private-build.outputs.source_sha }}
+        run: |
+          set -euo pipefail
+
+          version="$(jq -r '.version' publish/release.json)"
+          checksum="$(jq -r '.sha256' publish/release.json)"
+          short_sha="${SOURCE_SHA:0:7}"
+          tag="windows-v${version}-${short_sha}"
+          title="AKRA WhyShutdown v${version} (${short_sha})"
+
+          cat > release-notes.md <<EOF
+          Automated Windows x64 distribution.
+
+          - Version: ${version}
+          - Source commit: ${SOURCE_SHA}
+          - SHA-256: ${checksum}
+
+          This build is not code-signed and may show a Windows SmartScreen warning.
+          EOF
+
+          assets=(
+            publish/AKRA-WhyShutdown-windows-x64.zip
+            publish/AKRA-WhyShutdown-windows-x64.zip.sha256
+            publish/release.json
+          )
+
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "${assets[@]}" \
+              --repo "$GITHUB_REPOSITORY" \
+              --clobber
+            gh release edit "$tag" \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "$title" \
+              --notes-file release-notes.md \
+              --latest
+          else
+            gh release create "$tag" "${assets[@]}" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "$title" \
+              --notes-file release-notes.md \
+              --latest
+          fi
+
       - name: Publish gh-pages branch
         shell: bash
         env:
