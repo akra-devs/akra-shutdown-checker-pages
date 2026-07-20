@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#0d1117">
   <meta
     name="description"
-    content="AKRA WhyShutdown? — Windows PC의 갑작스러운 전원 종료 직전 상태를 기록하고 확인하세요."
+    content="AKRA WhyShutdown? — Windows PC가 갑자기 꺼지기 직전의 상태를 기록하고, AI 진단 프롬프트로 정리하세요."
   >
-  <title>AKRA WhyShutdown? — Windows 전원 종료 진단</title>
+  <title>AKRA WhyShutdown? — Windows 갑작스러운 꺼짐 진단</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,8 +48,9 @@
         <p class="eyebrow"><span></span> WINDOWS POWER-LOSS DIAGNOSTICS</p>
         <h1 id="hero-title">꺼진 뒤에도,<br>직전의 증거는 남습니다.</h1>
         <p class="hero-description">
-          CPU·GPU·VRM·전압·메모리를 조용히 기록하고, 갑작스러운 종료 뒤
-          마지막 순간의 상태를 한 화면에서 확인하세요.
+          CPU·GPU·VRM·전압·메모리를 계속 기록하고, PC가 갑자기 꺼진 뒤
+          마지막 순간의 상태를 한 화면에서 확인하세요. 필요한 기록은
+          AI 진단 프롬프트로 한 번에 복사할 수 있습니다.
         </p>
 
         <div class="download-actions">
@@ -88,10 +89,15 @@
         </div>
         <img
           src="./assets/whyshutdown.png"
-          alt="CPU, GPU, VRM, 메모리와 전압 상태 및 진단 추이를 보여주는 AKRA WhyShutdown? 화면"
+          alt="CPU, GPU, VRM, 메모리와 전압 상태 및 시간대별 변화를 보여주는 AKRA WhyShutdown? 화면"
           width="1068"
           height="739"
         >
+        <div class="shot-callouts" aria-hidden="true">
+          <span class="shot-callout callout-status">기록 상태를 한눈에</span>
+          <span class="shot-callout callout-sensors">핵심 센서 바로 확인</span>
+          <span class="shot-callout callout-charts">시간대별 변화 추적</span>
+        </div>
       </div>
     </section>
 
@@ -99,7 +105,7 @@
       <p><strong>1초</strong><span>기본 기록 간격</span></p>
       <p><strong>20분</strong><span>종료 직전 보존</span></p>
       <p><strong>로컬</strong><span>PC 안에만 저장</span></p>
-      <p><strong>MIT</strong><span>라이선스</span></p>
+      <p><strong>AI</strong><span>진단 프롬프트 복사</span></p>
     </section>
 
     <section class="section" aria-labelledby="workflow-title">
@@ -116,20 +122,75 @@
         <article>
           <span>02</span>
           <h3>종료 순간은 보존</h3>
-          <p>비정상 종료로 열린 채 남은 세션과 직전 구간을 다음 부팅까지 지킵니다.</p>
+          <p>갑자기 꺼져 정상적으로 끝나지 못한 기록과 종료 직전 데이터를 다음 부팅까지 보존합니다.</p>
         </article>
         <article>
           <span>03</span>
           <h3>재부팅 뒤 확인</h3>
-          <p>같은 시간축에서 온도·전력·제한 신호와 Windows 이벤트를 함께 읽습니다.</p>
+          <p>온도·전력·제한 신호와 Windows 이벤트를 같은 시간대에 나란히 확인합니다.</p>
         </article>
+      </div>
+    </section>
+
+    <section class="section ai-section" aria-labelledby="ai-title">
+      <div class="ai-copy">
+        <p class="eyebrow">AI-ASSISTED REVIEW</p>
+        <h2 id="ai-title">기록을 복사하면,<br>AI가 결론부터 정리합니다.</h2>
+        <p>
+          종료 기록을 고르고 <strong>AI 진단 프롬프트 복사</strong>를 누르세요.
+          PC 사양, Windows 이벤트와 마지막 센서값을 한 번에 붙여넣을 수 있는
+          요청문으로 정리합니다.
+        </p>
+        <ol class="prompt-steps">
+          <li><span>1</span><p><strong>종료 기록 선택</strong>확인할 시점을 고릅니다.</p></li>
+          <li><span>2</span><p><strong>프롬프트 복사</strong>진단에 필요한 내용만 모읍니다.</p></li>
+          <li><span>3</span><p><strong>AI에 붙여넣기</strong>결론·근거·다음 확인 순서로 답을 받습니다.</p></li>
+        </ol>
+        <p class="privacy-note">
+          앱이 AI를 직접 실행하거나 데이터를 자동으로 보내지는 않습니다.
+          복사한 내용은 사용자가 확인한 뒤 원하는 AI 서비스에 붙여넣습니다.
+        </p>
+      </div>
+
+      <div class="ai-preview" role="group" aria-labelledby="preview-title">
+        <div class="preview-bar">
+          <span></span>
+          <p id="preview-title">AI 답변 형식 예시</p>
+          <strong>짧고 명확하게</strong>
+        </div>
+        <div class="preview-body">
+          <div class="preview-conclusion">
+            <p>결론</p>
+            <strong>전원 공급 계통을 먼저 확인하세요.</strong>
+            <span>확신도 · 중간</span>
+          </div>
+          <div class="preview-columns">
+            <section>
+              <h3>핵심 근거</h3>
+              <ul>
+                <li>종료 직전 온도 제한 신호 없음</li>
+                <li>BugCheck·WHEA 이벤트 없음</li>
+                <li>Event 41만으로 원인 특정 불가</li>
+              </ul>
+            </section>
+            <section>
+              <h3>다음 확인</h3>
+              <ol>
+                <li>PSU 모델·정격 용량 확인</li>
+                <li>전원 케이블 다시 연결</li>
+                <li>메모리 기본 설정에서 재현 확인</li>
+              </ol>
+            </section>
+          </div>
+          <p class="preview-note">실제 답변은 기록에 따라 달라집니다.</p>
+        </div>
       </div>
     </section>
 
     <section class="section feature-section" aria-labelledby="feature-title">
       <div class="section-heading">
         <p class="eyebrow">WHAT IT RECORDS</p>
-        <h2 id="feature-title">전원 종료 직전의<br>하드웨어 문맥</h2>
+        <h2 id="feature-title">꺼지기 직전의<br>하드웨어 상태</h2>
       </div>
       <div class="feature-grid">
         <article>
@@ -139,7 +200,7 @@
           </svg>
           <div>
             <h3>CPU와 GPU</h3>
-            <p>온도, 순간 전력, 사용률, 클럭과 thermal·power 제한 신호</p>
+            <p>온도, 순간 전력, 사용률, 클럭과 온도·전력 제한 신호</p>
           </div>
         </article>
         <article>
@@ -158,7 +219,7 @@
           </svg>
           <div>
             <h3>종료 기록</h3>
-            <p>마지막 샘플, Windows 이벤트와 센서별 min·max·last 요약</p>
+            <p>마지막 센서값, Windows 이벤트와 센서별 최솟값·최댓값 요약</p>
           </div>
         </article>
         <article>
@@ -174,13 +235,58 @@
       </div>
     </section>
 
+    <section class="section screen-section" aria-labelledby="screen-title">
+      <div class="section-heading">
+        <p class="eyebrow">SCREEN DETAILS</p>
+        <h2 id="screen-title">숫자만 보지 않고,<br>변화까지 확인합니다.</h2>
+        <p>
+          현재값과 범위를 먼저 살펴보고, 그래프에서 종료 직전의 급격한 변화를
+          정확한 시각과 함께 확인할 수 있습니다.
+        </p>
+      </div>
+      <div class="detail-shots">
+        <figure>
+          <div class="shot-crop sensor-crop">
+            <img
+              src="./assets/whyshutdown.png"
+              alt="CPU, GPU, VRM, 메모리와 12V 전압의 현재값, 최솟값, 최댓값을 보여주는 화면 확대"
+              width="1068"
+              height="739"
+              loading="lazy"
+              decoding="async"
+            >
+          </div>
+          <figcaption>
+            <strong>핵심 센서 요약</strong>
+            <span>현재값과 기록 구간의 최솟값·최댓값을 바로 비교합니다.</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <div class="shot-crop chart-crop">
+            <img
+              src="./assets/whyshutdown.png"
+              alt="CPU 온도와 CPU 패키지 전력의 시간대별 변화를 보여주는 그래프 확대"
+              width="1068"
+              height="739"
+              loading="lazy"
+              decoding="async"
+            >
+          </div>
+          <figcaption>
+            <strong>시간대별 그래프</strong>
+            <span>마우스를 올리면 해당 시각의 센서값을 정확히 확인합니다.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
     <section class="install-section" id="install" aria-labelledby="install-title">
       <div>
         <p class="eyebrow">INSTALL</p>
         <h2 id="install-title">압축을 풀고,<br>관리자로 설치하세요.</h2>
         <p>
           다운로드한 ZIP을 푼 뒤 해당 폴더에서 관리자 PowerShell을 열고 실행합니다.
-          기록 서비스와 GUI가 함께 설치됩니다.
+          기록 서비스와 Windows 앱이 함께 설치됩니다.
         </p>
       </div>
       <div class="terminal" aria-label="PowerShell 설치 명령">
@@ -223,16 +329,16 @@
         </svg>
       </a>
       <p class="release-note">
-        현재 배포본은 코드 서명되지 않아 Windows SmartScreen 경고가 표시될 수 있습니다.
+        배포 파일에는 아직 코드 서명이 없어 Windows SmartScreen 경고가 표시될 수 있습니다.
         체크섬으로 파일 무결성을 확인한 뒤 실행하세요. 이 도구는 PSU의 순간 전기 신호를
-        직접 측정하거나 고장 원인을 자동 확정하지 않습니다.
+        직접 측정하거나 고장 원인을 자동으로 확정하지 않습니다.
       </p>
     </section>
   </main>
 
   <footer>
     <p>© 2026 AKRA · AKRA WhyShutdown?</p>
-    <p>Windows 갑작스러운 전원 종료 진단</p>
+    <p>Windows 갑작스러운 꺼짐 진단</p>
   </footer>
 </body>
 </html>
