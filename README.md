@@ -1,7 +1,7 @@
 # akra-shutdown-checker-pages
 
 Public Windows download deployment for
-[AKRA WhyShutdown?](https://akra-devs.github.io/akra-shutdown-checker-pages/).
+[AKRA WhyShutdown?](https://akra.kr/akra-shutdown-checker-pages/).
 
 The Rust source stays in the private `akra-shutdown-checker` repository. Its
 workflow tests and builds the Windows x64 binaries before uploading a

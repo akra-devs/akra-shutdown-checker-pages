@@ -1,0 +1,54 @@
+name: Publish WhyShutdown landing page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/publish-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: whyshutdown-pages-sync
+  cancel-in-progress: false
+
+jobs:
+  publish-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out page source
+        uses: actions/checkout@v4
+        with:
+          path: source
+          persist-credentials: false
+
+      - name: Check out public branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: deploy
+
+      - name: Publish landing page files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f source/site/index.html
+          cp -a source/site/. deploy/
+          touch deploy/.nojekyll
+
+          git -C deploy config user.name 'github-actions[bot]'
+          git -C deploy config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C deploy add --all
+
+          if git -C deploy diff --cached --quiet; then
+            echo 'Landing page is already current.'
+            exit 0
+          fi
+
+          git -C deploy commit -m "Publish WhyShutdown landing page from ${GITHUB_SHA}"
+          git -C deploy push origin HEAD:gh-pages

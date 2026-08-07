@@ -28,5 +28,5 @@ fetch("./release.json", { cache: "no-store" })
     sha.textContent = release.sha256;
   })
   .catch(() => {
-    date.textContent = "페이지 배포 정보 확인 필요";
+    date.textContent = "배포 정보를 불러오지 못했습니다.";
   });
