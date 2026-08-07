@@ -90,6 +90,12 @@ footer {
   justify-content: space-between;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .brand,
 .header-link {
   display: inline-flex;
@@ -848,6 +854,10 @@ a:focus-visible {
 
   .header-link {
     font-size: 0;
+  }
+
+  .header-actions {
+    gap: 14px;
   }
 
   .header-link svg {
