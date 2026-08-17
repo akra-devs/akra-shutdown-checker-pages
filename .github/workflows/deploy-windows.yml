@@ -151,45 +151,69 @@ jobs:
           jq -e --arg source_sha "$SOURCE_SHA" '
             .source_sha == $source_sha
             and (.version | type == "string")
-            and (.file_name | type == "string")
-            and (.sha256 | test("^[0-9a-f]{64}$"))
-            and (.size_bytes | type == "number" and . > 0)
+            and ([.artifacts.portable, .artifacts.installed] | all(
+              (.file_name | type == "string")
+              and (.sha256 | test("^[0-9a-f]{64}$"))
+              and (.size_bytes | type == "number" and . > 0)
+            ))
           ' artifact/release.json >/dev/null
 
-          file_name="$(jq -r '.file_name' artifact/release.json)"
-          expected_hash="$(jq -r '.sha256' artifact/release.json)"
-          if [[ ! "$file_name" =~ ^AKRA-WhyShutdown-v[0-9]+\.[0-9]+\.[0-9]+-windows-x64-[0-9a-f]{7}\.zip$ ]]; then
-            echo "::error title=Unexpected file name::${file_name} is not a release package name."
-            exit 1
-          fi
+          for kind in portable installed; do
+            file_name="$(jq -r ".artifacts.${kind}.file_name" artifact/release.json)"
+            expected_hash="$(jq -r ".artifacts.${kind}.sha256" artifact/release.json)"
+            if [[ "$kind" == portable ]]; then
+              pattern='^AKRA-WhyShutdown-v[0-9]+\.[0-9]+\.[0-9]+-portable-windows-x64-[0-9a-f]{7}\.zip$'
+            else
+              pattern='^AKRA-WhyShutdown-v[0-9]+\.[0-9]+\.[0-9]+-windows-x64-[0-9a-f]{7}\.zip$'
+            fi
+            if [[ ! "$file_name" =~ $pattern ]]; then
+              echo "::error title=Unexpected file name::${file_name} is not a ${kind} release package name."
+              exit 1
+            fi
 
-          test -s "artifact/${file_name}"
-          test -s "artifact/${file_name}.sha256"
-          test "$(stat -c '%s' "artifact/${file_name}")" -lt 100000000
-          test "$(sha256sum "artifact/${file_name}" | cut -d' ' -f1)" = "$expected_hash"
-          tr -d '\r' < "artifact/${file_name}.sha256" \
-            | grep -Fxq "${expected_hash}  ${file_name}"
+            test -s "artifact/${file_name}"
+            test -s "artifact/${file_name}.sha256"
+            test "$(stat -c '%s' "artifact/${file_name}")" -lt 100000000
+            test "$(sha256sum "artifact/${file_name}" | cut -d' ' -f1)" = "$expected_hash"
+            tr -d '\r' < "artifact/${file_name}.sha256" \
+              | grep -Fxq "${expected_hash}  ${file_name}"
 
-          rm -rf package
-          mkdir package
-          unzip -q "artifact/${file_name}" -d package
-          test -s package/AKRA-WhyShutdown-windows-x64/target/release/powertrace.exe
-          test -s package/AKRA-WhyShutdown-windows-x64/target/release/powertrace-ui.exe
-          test -s package/AKRA-WhyShutdown-windows-x64/scripts/install.ps1
-          test -s package/AKRA-WhyShutdown-windows-x64/scripts/uninstall.ps1
-          if find package -type l -print -quit | grep -q .; then
-            echo '::error title=Unsafe artifact::Symbolic links are not allowed in the Windows distribution.'
-            exit 1
-          fi
+            rm -rf package
+            mkdir package
+            unzip -q "artifact/${file_name}" -d package
+            if [[ "$kind" == portable ]]; then
+              test -s package/AKRA-WhyShutdown-portable-windows-x64/powertrace.exe
+              test -s package/AKRA-WhyShutdown-portable-windows-x64/powertrace-ui.exe
+              test -s package/AKRA-WhyShutdown-portable-windows-x64/portable.mode
+              test -s package/AKRA-WhyShutdown-portable-windows-x64/PORTABLE.md
+            else
+              test -s package/AKRA-WhyShutdown-windows-x64/target/release/powertrace.exe
+              test -s package/AKRA-WhyShutdown-windows-x64/target/release/powertrace-ui.exe
+              test -s package/AKRA-WhyShutdown-windows-x64/scripts/install.ps1
+              test -s package/AKRA-WhyShutdown-windows-x64/scripts/uninstall.ps1
+            fi
+            if find package -type l -print -quit | grep -q .; then
+              echo '::error title=Unsafe artifact::Symbolic links are not allowed in the Windows distribution.'
+              exit 1
+            fi
+          done
           rm -rf package
 
           cp -a site publish
-          cp "artifact/${file_name}" "publish/${file_name}"
-          cp "artifact/${file_name}.sha256" "publish/${file_name}.sha256"
           cp artifact/release.json publish/release.json
-          cp "artifact/${file_name}" publish/AKRA-WhyShutdown-windows-x64.zip
-          printf '%s  %s\n' "$expected_hash" 'AKRA-WhyShutdown-windows-x64.zip' \
-            > publish/AKRA-WhyShutdown-windows-x64.zip.sha256
+          for kind in portable installed; do
+            file_name="$(jq -r ".artifacts.${kind}.file_name" artifact/release.json)"
+            expected_hash="$(jq -r ".artifacts.${kind}.sha256" artifact/release.json)"
+            cp "artifact/${file_name}" "publish/${file_name}"
+            cp "artifact/${file_name}.sha256" "publish/${file_name}.sha256"
+            if [[ "$kind" == portable ]]; then
+              stable_name='AKRA-WhyShutdown-portable-windows-x64.zip'
+            else
+              stable_name='AKRA-WhyShutdown-windows-x64.zip'
+            fi
+            cp "artifact/${file_name}" "publish/${stable_name}"
+            printf '%s  %s\n' "$expected_hash" "$stable_name" > "publish/${stable_name}.sha256"
+          done
           printf '%s\n' "$SOURCE_SHA" > publish/.source-sha
           touch publish/.nojekyll
 
@@ -227,7 +251,8 @@ jobs:
           set -euo pipefail
 
           version="$(jq -r '.version' publish/release.json)"
-          checksum="$(jq -r '.sha256' publish/release.json)"
+          portable_checksum="$(jq -r '.artifacts.portable.sha256' publish/release.json)"
+          installed_checksum="$(jq -r '.artifacts.installed.sha256' publish/release.json)"
           short_sha="${SOURCE_SHA:0:7}"
           tag="windows-v${version}-${short_sha}"
           title="AKRA WhyShutdown v${version} (${short_sha})"
@@ -237,12 +262,15 @@ jobs:
 
           - Version: ${version}
           - Source commit: ${SOURCE_SHA}
-          - SHA-256: ${checksum}
+          - Portable SHA-256: ${portable_checksum}
+          - Installed SHA-256: ${installed_checksum}
 
           This build is not code-signed and may show a Windows SmartScreen warning.
           EOF
 
           assets=(
+            publish/AKRA-WhyShutdown-portable-windows-x64.zip
+            publish/AKRA-WhyShutdown-portable-windows-x64.zip.sha256
             publish/AKRA-WhyShutdown-windows-x64.zip
             publish/AKRA-WhyShutdown-windows-x64.zip.sha256
             publish/release.json
@@ -276,6 +304,8 @@ jobs:
           set +x
 
           test -s publish/index.html
+          test -s publish/AKRA-WhyShutdown-portable-windows-x64.zip
+          test -s publish/AKRA-WhyShutdown-portable-windows-x64.zip.sha256
           test -s publish/AKRA-WhyShutdown-windows-x64.zip
           test -s publish/AKRA-WhyShutdown-windows-x64.zip.sha256
           test -s publish/release.json
