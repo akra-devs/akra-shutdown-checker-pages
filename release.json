@@ -1,17 +1,17 @@
 {
   "version": "0.1.0",
-  "source_sha": "e13ad0c955bf3755fba8e65496bd885092b9d80c",
-  "generated_at": "2026-08-17T18:30:11.788Z",
+  "source_sha": "33b73d30da20a184fcf2ee646478d17ca934e74e",
+  "generated_at": "2026-08-17T20:08:03.6923305Z",
   "artifacts": {
     "portable": {
-      "file_name": "AKRA-WhyShutdown-v0.1.0-portable-windows-x64-e13ad0c.zip",
-      "sha256": "6e08cc8c36c725e826965535792ca44ca1c1ca76beb41c0c2239c792abdafae8",
-      "size_bytes": 4592524
+      "file_name": "AKRA-WhyShutdown-v0.1.0-portable-windows-x64-33b73d3.zip",
+      "sha256": "e16f720063485e0ccad248de7f68714bcb5757cc47af7efe43f6b8e3ae0ed18d",
+      "size_bytes": 5015035
     },
     "installed": {
-      "file_name": "AKRA-WhyShutdown-v0.1.0-windows-x64-e13ad0c.zip",
-      "sha256": "bec3447b9a0280b3aabbe3bcb6b05dd2c4ddd969670f0ed3a452f6adcd9b96a4",
-      "size_bytes": 4595583
+      "file_name": "AKRA-WhyShutdown-v0.1.0-windows-x64-33b73d3.zip",
+      "sha256": "48310226a22ef90fb245a8a048688e7fd461bcc3588459d210257c0598349f9e",
+      "size_bytes": 5017857
     }
   }
 }
